@@ -12,20 +12,22 @@ import AdvisoriesPublic from './Components/Advisory'
 import GeoInsights from './Components/MapGeoInsights'
 import ReportsAnalytics from './Components/ReportsAnalytics'
 
+import PrivateRoute from './Components/Private Route'
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/dashboard" element={<HospitalDashboard />} />
-        <Route path="/forecast-planner" element={<ForecastPlanner />} />
-        <Route path="/staffing-planner" element={<StaffingPlanner />} />
-        <Route path="/supply-inventory" element={<SupplyInventory />} />
-        <Route path="/alerts-notifications" element={<AlertsNotifications />} />
-        <Route path="/advisories-public" element={<AdvisoriesPublic />} />
-        <Route path="/geo-insights" element={<GeoInsights />} />
-        <Route path="/reports-analytics" element={<ReportsAnalytics />} />
+        <Route path="/dashboard" element={<PrivateRoute><HospitalDashboard /></PrivateRoute>} />
+        <Route path="/forecast-planner" element={<PrivateRoute><ForecastPlanner /></PrivateRoute>} />
+        <Route path="/staffing-planner" element={<PrivateRoute><StaffingPlanner /></PrivateRoute>} />
+        <Route path="/supply-inventory" element={<PrivateRoute><SupplyInventory /></PrivateRoute>} />
+        <Route path="/alerts-notifications" element={<PrivateRoute><AlertsNotifications /></PrivateRoute>} />
+        <Route path="/advisories-public" element={<PrivateRoute><AdvisoriesPublic /></PrivateRoute>} />
+        <Route path="/geo-insights" element={<PrivateRoute><GeoInsights /></PrivateRoute>} />
+        <Route path="/reports-analytics" element={<PrivateRoute><ReportsAnalytics /></PrivateRoute>} />
       </Routes>
     </Router>
   )

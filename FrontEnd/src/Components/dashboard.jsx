@@ -6,10 +6,10 @@
 /* eslint-disable */
 
 import React, { useState } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useLocation,useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { MapPin, AlertTriangle, Users, Package, Grid, PieChart, Settings, LogOut, Menu } from 'lucide-react';
+import { MapPin, AlertTriangle, Users, Package, Grid, PieChart, LogOut, Menu, Bell, Globe, Megaphone } from 'lucide-react';
 import RegionalMap from './Map'; // keep your existing map component
 
 import ForecastPlanner from './ForecastPlanner'
@@ -39,6 +39,11 @@ const pageTransition = {
 };
 
 function Topbar({ onToggleSidebar }) {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
   return (
     <header className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-4">
@@ -48,8 +53,8 @@ function Topbar({ onToggleSidebar }) {
         <h1 className="text-2xl font-bold text-teal-300">HealthPredict AI Dashboard</h1>
       </div>
       <div className="space-x-3 hidden sm:flex">
-        <button className="border border-teal-400 text-teal-300 px-4 py-2 rounded-xl hover:bg-teal-900 transition"><Settings size={14} /> Settings</button>
-        <button className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-xl transition"><LogOut size={14} /> Logout</button>
+        <button onClick={()=> navigate('/alerts-notifications')} className="border border-teal-400 text-teal-300 px-4 py-2 rounded-xl hover:bg-teal-900 transition"><Bell size={14} /> Notification</button>
+        <button onClick={handleLogout} className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-xl transition"><LogOut size={14} /> Logout</button>
       </div>
     </header>
   );
@@ -62,8 +67,8 @@ function Sidebar({ collapsed, setCollapsed }) {
     { id: 'staffing', label: 'Staffing Planner', icon: Users, to: '/staffing-planner' },
     { id: 'supply', label: 'Supply Inventory', icon: Package, to: '/supply-inventory' },
     { id: 'alerts', label: 'Alerts & Notifications', icon: AlertTriangle, to: '/alerts-notifications' },
-    { id: 'advisories', label: 'Advisories (Public)', icon: MapPin, to: '/advisories-public' },
-    { id: 'geo', label: 'Geo Insights', icon: MapPin, to: '/geo-insights' },
+    { id: 'advisories', label: 'Advisories (Public)', icon: Megaphone, to: '/advisories-public' },
+    { id: 'geo', label: 'Geo Insights', icon: Globe, to: '/geo-insights' },
     { id: 'reports', label: 'Reports & Analytics', icon: PieChart, to: '/reports-analytics' }
   ];
 
@@ -116,6 +121,7 @@ function PageWrapper({ children }) {
 
 // --- Pages ---
 function Overview() {
+  const navigate = useNavigate();
   return (
     <div className="space-y-6">
       {/* Top Summary Cards */}
@@ -163,9 +169,9 @@ function Overview() {
 
       {/* Quick Actions */}
       <div className="flex flex-wrap gap-4 justify-center mt-6">
-        <button className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl transition">Auto-generate Staffing Plan</button>
-        <button className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl transition">Order Supplies</button>
-        <button className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl transition">Send Advisory</button>
+        <button onClick={() => navigate('/staffing-planner')} className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl transition">Auto-generate Staffing Plan</button>
+        <button onClick={() => navigate('/supply-inventory')} className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl transition">Order Supplies</button>
+        <button onClick={() => navigate('/advisories-public')} className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl transition">Send Advisory</button>
       </div>
     </div>
   );

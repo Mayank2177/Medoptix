@@ -1,12 +1,12 @@
 /* eslint-disable */
-
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { User, CalendarClock, CheckCircle, XCircle, PhoneCall, Users } from "lucide-react";
-
+import { motion, AnimatePresence } from "framer-motion";
+import { User, CalendarClock, CheckCircle, XCircle, PhoneCall, Users, ClipboardList } from "lucide-react";
 import BackButton from "./BackButton";
 
 export default function StaffingPlanner() {
+  const [showPopup, setShowPopup] = useState(false);
+  const [staffCount, setStaffCount] = useState("");
   const [shifts, setShifts] = useState([
     { id: 1, name: "Dr. Meena", role: "Cardiologist", shift: "Morning", contact: "+91 9876543210" },
     { id: 2, name: "Dr. Arjun", role: "Surgeon", shift: "Evening", contact: "+91 9123456789" },
@@ -19,9 +19,17 @@ export default function StaffingPlanner() {
     { shift: "Night", recommended: 5, current: 5 },
   ]);
 
+  const handlePopupSubmit = () => {
+    alert(`Staff Present: ${staffCount}`);
+    setShowPopup(false);
+    setStaffCount("");
+  };
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-[#061726] to-[#0A2236] text-white flex justify-center items-center p-8 font-sans">
       <BackButton />
+
+      {/* Main container */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -33,9 +41,17 @@ export default function StaffingPlanner() {
           <h1 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-300 flex items-center gap-2">
             <CalendarClock size={26} /> Staffing Planner / Roster
           </h1>
-          <button className="bg-gradient-to-r from-teal-400 to-cyan-300 text-black px-6 py-2 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg shadow-teal-900/30">
-            Publish Schedule
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowPopup(true)}
+              className="flex items-center gap-2 bg-[#14364A] border border-[#1E4A5D] text-teal-300 px-5 py-2 rounded-xl hover:scale-105 transition shadow-md hover:border-teal-400"
+            >
+              <ClipboardList size={18} /> Input Staff Presence
+            </button>
+            <button className="bg-gradient-to-r from-teal-400 to-cyan-300 text-black px-6 py-2 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg shadow-teal-900/30">
+              Publish Schedule
+            </button>
+          </div>
         </div>
 
         {/* Top Section */}
@@ -106,7 +122,6 @@ export default function StaffingPlanner() {
             className="lg:col-span-3 bg-[#102B3E]/70 border border-[#1E4A5D] rounded-2xl p-6"
           >
             <h2 className="text-lg text-teal-300 mb-4">Shift Timeline</h2>
-
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm text-gray-300">
                 <thead>
@@ -119,10 +134,7 @@ export default function StaffingPlanner() {
                 </thead>
                 <tbody>
                   {shifts.map((s) => (
-                    <tr
-                      key={s.id}
-                      className="border-b border-[#1E4A5D] hover:bg-[#14364A] transition"
-                    >
+                    <tr key={s.id} className="border-b border-[#1E4A5D] hover:bg-[#14364A] transition">
                       <td className="py-3 px-4 flex items-center gap-2">
                         <User className="text-teal-400" size={16} /> {s.name}
                       </td>
@@ -165,6 +177,54 @@ export default function StaffingPlanner() {
           </motion.div>
         </div>
       </motion.div>
+
+      {/* ✅ Popup Modal */}
+      <AnimatePresence>
+        {showPopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur-sm z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#0F1F33] border border-[#1E4A5D] rounded-2xl p-8 shadow-2xl w-[400px] text-center"
+            >
+              <h2 className="text-xl font-semibold text-teal-300 mb-4">
+                Staff Presence Input
+              </h2>
+              <p className="text-gray-400 mb-4 text-sm">
+                Enter the number of staff currently present.
+              </p>
+              <input
+                type="number"
+                value={staffCount}
+                onChange={(e) => setStaffCount(e.target.value)}
+                className="w-full p-3 rounded-xl bg-[#122E46] border border-[#1E4A5D] text-white text-center focus:outline-none focus:ring-2 focus:ring-teal-400 mb-5"
+                placeholder="e.g., 6"
+              />
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={handlePopupSubmit}
+                  className="bg-gradient-to-r from-teal-400 to-cyan-300 text-black px-5 py-2 rounded-xl hover:scale-105 transition shadow-md font-semibold"
+                >
+                  Submit
+                </button>
+                <button
+                  onClick={() => setShowPopup(false)}
+                  className="bg-[#14364A] border border-[#1E4A5D] text-gray-300 px-5 py-2 rounded-xl hover:scale-105 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
